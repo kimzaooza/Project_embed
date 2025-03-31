@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model cards {
+  id         Int         @id @default(autoincrement())
+  card_id    String
+  first_name String
+  last_name  String
+  password   String
+  created_at DateTime    @default(now())
+  scan_logs  scan_logs[]
+
+  @@map("cards")
+}
+
+model scan_logs {
+  id         Int      @id @default(autoincrement())
+  card_id    Int
+  created_at DateTime @default(now())
+  card       cards    @relation(fields: [card_id], references: [id])
+
+  @@map("scan_logs")
+}
